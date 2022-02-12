@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Product360photo</string>
+    <string name="todo">todo</string>
+    <string name="select_object">Which object do you want to capture?</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="state_continue">Continue</string>
+    <string name="state_wrong">direction</string>
+    <string name="camera_btn_rec">shot</string>
+    <string name="camera_btn_stop">stop</string>
+    <string name="image_saved_path">/360_photo</string>
+</resources>
