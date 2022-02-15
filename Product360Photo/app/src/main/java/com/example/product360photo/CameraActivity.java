@@ -7,18 +7,25 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Size;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.camera.core.Camera;
@@ -33,11 +40,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.example.product360photo.model.Box;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
@@ -46,6 +59,7 @@ public class CameraActivity extends AppCompatActivity {
 //    private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"};
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
+    private ArrayList<String> arrayListPictureAssets = new ArrayList<String>();
 
     private ImageView imageView;
     private TextView angles;
@@ -58,6 +72,7 @@ public class CameraActivity extends AppCompatActivity {
     private float cur_orientation;
     private float first_orientation;
     private ImageCapture imageCapture;
+    private ImageView view_finder;
     private View view;
 
     private float[] floatGravity = new float[3];
@@ -68,6 +83,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private String imageFolder="";
     private String path = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +107,7 @@ public class CameraActivity extends AppCompatActivity {
                 else gotoProductView();
             }
         });
-
+        view_finder = findViewById(R.id.view_finder);
 
         if (checkPermission()) {
             cameraProviderFuture = ProcessCameraProvider.getInstance(this);
@@ -121,36 +137,7 @@ public class CameraActivity extends AppCompatActivity {
 
                 SensorManager.getRotationMatrix(floatRotationMatrix, null, floatGravity, floatGeoMagnetic);
                 SensorManager.getOrientation(floatRotationMatrix, floatOrientation);
-
-//                imageView.setRotation((float) (-floatOrientation[0]*180/3.14159));
-//                angles.setText( String.valueOf((float) (-floatOrientation[0])));
-//
-//                if(Flag == 1){
-//                    if(count < 1){
-//                        CaptureImage(view);
-//                        cur_orientation = -floatOrientation[0];
-//                    }else{
-//                        if(cur_orientation >= 3.0 && -floatOrientation[0] < 0)  {
-//                            CaptureImage(view);
-//                            cur_orientation = -floatOrientation[0];
-//                        }
-//                        if(-floatOrientation[0] > cur_orientation+0.1){
-//                            CaptureImage(view);
-//                            cur_orientation = -floatOrientation[0];
-//                        }
-//                    }
-//                }
-//
-//                if((-floatOrientation[0]) > cur_orientation+0.01){
-//                    state.setText( "Wrong direction");
-//                    state.setTextColor(Color.parseColor("#ff0303"));
-//                    imageView.setVisibility(View.VISIBLE);
-//                }
-//                else {
-//                    state.setText( "Continue");
-//                    state.setTextColor(Color.parseColor("#03ff31"));
-//                    imageView.setVisibility(View.INVISIBLE);
-//                }
+                //to do camera capture
             }
 
             @Override
@@ -288,6 +275,7 @@ public class CameraActivity extends AppCompatActivity {
             Flag = 1;
             button.setText(R.string.camera_btn_stop);
             button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFFD0303")));
+            view_finder.setImageResource(R.drawable.view_finder_1);
 
             imageFolder = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
             path = GlobalConst.home_path + File.separator + imageFolder;
@@ -301,8 +289,13 @@ public class CameraActivity extends AppCompatActivity {
             count = 0;
             button.setText(R.string.camera_btn_rec);
             button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FDFFFF")));
+            view_finder.setImageResource(R.drawable.view_finder_2);
             state.setText( "");
             imageView.setVisibility(View.INVISIBLE);
+
+            Intent intent = new Intent(this, YoloDetectActivity.class);
+            intent.putExtra("ImageFolder", imageFolder);
+            startActivity(intent);
         }
     }
 
