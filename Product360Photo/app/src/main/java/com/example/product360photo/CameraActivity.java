@@ -296,6 +296,7 @@ public class CameraActivity extends AppCompatActivity {
             Intent intent = new Intent(this, YoloDetectActivity.class);
             intent.putExtra("ImageFolder", imageFolder);
             startActivity(intent);
+            finish();
         }
     }
 

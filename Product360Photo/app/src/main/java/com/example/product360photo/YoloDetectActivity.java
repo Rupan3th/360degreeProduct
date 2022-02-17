@@ -11,7 +11,9 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -56,16 +58,18 @@ public class YoloDetectActivity extends AppCompatActivity {
         progressText.setText("Progressing...");
 
         YOLOv4.init(getAssets(), USE_GPU);
-        YoloDetectCrop();
+        //YoloDetectCrop();
 
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                YoloDetectCrop();
-//            }
-//        },0);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                progress = 0;
+                YoloDetectCrop();
+            }
+        });
+        thread.start();
     }
+
 
     private void YoloDetectCrop(){
         path = GlobalConst.home_path + File.separator + imageFolder;
@@ -80,6 +84,15 @@ public class YoloDetectActivity extends AppCompatActivity {
                     FileOutputStream fos = new FileOutputStream(pictureFile);
                     detectImage.compress(Bitmap.CompressFormat.PNG, 90, fos);
                     fos.close();
+                    progress++;
+                    runOnUiThread(new Runnable() {
+                                      @Override
+                                      public void run() {
+                                          int pro = progress * 100 / dir_size;
+                                          progressText.setText(pro + "%");
+                                          progressBar.setProgress(pro);
+                                      }
+                                  });
 //                    final Handler handler = new Handler();
 //                    handler.postDelayed(new Runnable() {
 //                        @Override
