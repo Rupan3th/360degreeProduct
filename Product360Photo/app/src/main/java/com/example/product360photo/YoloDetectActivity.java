@@ -53,21 +53,37 @@ public class YoloDetectActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
         progressText = findViewById(R.id.progress_text);
 
-        progressText.setText("Progressing...");
+//        progressText.setText("Progressing...");
 
-        YOLOv4.init(getAssets(), USE_GPU);
-        YoloDetectCrop();
+//        YoloDetectCrop();
 
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                YoloDetectCrop();
-//            }
-//        },0);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                YoloDetectCrop();
+            }
+        },0);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (progress <= 100) {
+                    progressText.setText(progress + "%");
+                    progressBar.setProgress(progress);
+                    progress++;
+                    handler.postDelayed(this, 200);
+                } else {
+                    handler.removeCallbacks(this);
+                }
+            }
+        }, 0);
     }
 
     private void YoloDetectCrop(){
+        YOLOv4.init(getAssets(), USE_GPU);
+
         path = GlobalConst.home_path + File.separator + imageFolder;
         File dir = new File(path);
         dir_size = dir.listFiles().length;
@@ -80,21 +96,6 @@ public class YoloDetectActivity extends AppCompatActivity {
                     FileOutputStream fos = new FileOutputStream(pictureFile);
                     detectImage.compress(Bitmap.CompressFormat.PNG, 90, fos);
                     fos.close();
-//                    final Handler handler = new Handler();
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            if (progress <= 100) {
-//                                progressText.setText(progress + "%");
-//                                progressBar.setProgress(progress);
-//                                progress++;
-//                                handler.postDelayed(this, 200);
-//                            } else {
-//                                handler.removeCallbacks(this);
-//                            }
-//                        }
-//                    }, 0);
-
                 } catch (FileNotFoundException e) {
 
                 } catch (IOException e) {
