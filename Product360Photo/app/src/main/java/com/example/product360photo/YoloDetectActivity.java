@@ -41,6 +41,9 @@ public class YoloDetectActivity extends AppCompatActivity {
     private String yolo_m01 = "";
     private String yolo_m02 = "";
 
+    private int crop_width =1920;
+    private int crop_height = 1080;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +59,16 @@ public class YoloDetectActivity extends AppCompatActivity {
         imageFolder = intent.getStringExtra("ImageFolder");
         product_type = intent.getStringExtra("product_type");
 
-        if(product_type.equals("vehicle"))  { yolo_m01 = "car"; yolo_m02 = "truck"; }
-        if(product_type.equals("product"))  { yolo_m01 = "cup"; yolo_m02 = "mouse"; }
+        if(product_type.equals("vehicle"))  {
+            yolo_m01 = "car"; yolo_m02 = "truck";
+            crop_width = GlobalConst.Crop_Width;
+            crop_height = GlobalConst.Crop_Height;
+        }
+        if(product_type.equals("product"))  {
+            yolo_m01 = "cup"; yolo_m02 = "mouse";
+            crop_width = GlobalConst.Resize_Width;
+            crop_height = GlobalConst.Resize_Height;
+        }
 
         progressBar = findViewById(R.id.progress_bar);
         progressText = findViewById(R.id.progress_text);
@@ -86,6 +97,7 @@ public class YoloDetectActivity extends AppCompatActivity {
             for (int i = 0; i < dir.listFiles().length; i++) {
                 Bitmap bitmap = BitmapFactory.decodeFile(path + "/" + dir.listFiles()[i].getName());
                 Bitmap detectImage = detectAndDraw(bitmap);
+                if(detectImage == null) continue;
                 File pictureFile = new File(path + "/" + dir.listFiles()[i].getName());
                 try {
                     FileOutputStream fos = new FileOutputStream(pictureFile);
@@ -100,20 +112,7 @@ public class YoloDetectActivity extends AppCompatActivity {
                             progressBar.setProgress(pro);
                         }
                     });
-//                    final Handler handler = new Handler();
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            if (progress <= 100) {
-//                                progressText.setText(progress + "%");
-//                                progressBar.setProgress(progress);
-//                                progress++;
-//                                handler.postDelayed(this, 200);
-//                            } else {
-//                                handler.removeCallbacks(this);
-//                            }
-//                        }
-//                    }, 0);
+
 
                 } catch (FileNotFoundException e) {
 
@@ -131,31 +130,17 @@ public class YoloDetectActivity extends AppCompatActivity {
         if (results == null || results.length <= 0) {
             return mutableBitmap;
         }
-//        Bitmap res = Bitmap.createBitmap(mutableBitmap.getWidth(), mutableBitmap.getHeight(), mutableBitmap.getConfig());
-//        Canvas canvas = new Canvas(res);
-//        canvas.drawBitmap(mutableBitmap, new Matrix(), null);
 
-//        final Paint boxPaint = new Paint();
-//        boxPaint.setAlpha(200);
-//        boxPaint.setStyle(Paint.Style.STROKE);
-//        boxPaint.setStrokeWidth(4 * mutableBitmap.getWidth() / 800.0f);
-//        boxPaint.setTextSize(30 * mutableBitmap.getWidth() / 800.0f);
         Bitmap res = mutableBitmap;
         for (Box box : results) {
             if(box.getLabel() == yolo_m01 || box.getLabel() == yolo_m02)
             {
-//                box.x1 = Math.min(mutableBitmap.getWidth() -1 , box.x1);
-//                box.y1 = Math.min(mutableBitmap.getHeight() -1 , box.y1);
-                int left = (int)box.x0;
-                int top = (int)box.y0;
-                int box_width = (int)box.getRect().width();
-                int box_height = (int)box.getRect().height();
-                int margin = 50;
-                if(left-margin >= 0 && top-margin >= 0 && box_width+margin <= mutableBitmap.getWidth() && box_height <= mutableBitmap.getHeight()){
-                    res = Bitmap.createBitmap(mutableBitmap, left-margin, top-margin, box_width+margin, box_height+margin);
-                }else {
-                    res = Bitmap.createBitmap(mutableBitmap, left, top, box_width, box_height);
-                }
+
+                int center_x = (int)(box.x0 + box.x1)/2;
+                int center_y = (int)(box.y0 + box.y1)/2;
+                int left = Math.max(0, center_x - crop_width/2);
+                int top = Math.max(0, center_y - crop_height /2);
+                res = Bitmap.createBitmap(mutableBitmap, left, top, crop_width, crop_height);
 
 //                canvas.drawRect(box.getRect(), boxPaint);
             }
@@ -168,9 +153,15 @@ public class YoloDetectActivity extends AppCompatActivity {
         Box[] result = null;
         result = YOLOv4.detect(image, threshold, nms_threshold);
         if (result == null ) {
-            return image;
+            return null;
         }
         Bitmap mutableBitmap = drawBoxRects(image, result);
+        if(crop_width != GlobalConst.Resize_Width)
+        {
+            Bitmap newBitmap = Bitmap.createScaledBitmap(mutableBitmap, GlobalConst.Resize_Width,
+                    GlobalConst.Resize_Height, true);
+            return newBitmap;
+        }
         return mutableBitmap;
     }
 }
