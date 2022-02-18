@@ -142,19 +142,34 @@ public class YoloDetectActivity extends AppCompatActivity {
                 int top = Math.max(0, center_y - crop_height /2);
                 res = Bitmap.createBitmap(mutableBitmap, left, top, crop_width, crop_height);
 
-//                canvas.drawRect(box.getRect(), boxPaint);
             }
 
         }
         return res;
     }
 
+    protected boolean checkResult(Box[] results)
+    {
+        boolean res = false;
+        if (results == null || results.length <= 0) {
+            return res;
+        }
+        for (Box box : results) {
+            if(box.getLabel() == yolo_m01 || box.getLabel() == yolo_m02)
+            {
+                res = true;
+            }
+        }
+        return res;
+    }
     protected Bitmap detectAndDraw(Bitmap image) {
         Box[] result = null;
         result = YOLOv4.detect(image, threshold, nms_threshold);
         if (result == null ) {
             return null;
         }
+        if(!checkResult(result))
+            return null;
         Bitmap mutableBitmap = drawBoxRects(image, result);
         if(crop_width != GlobalConst.Resize_Width)
         {
