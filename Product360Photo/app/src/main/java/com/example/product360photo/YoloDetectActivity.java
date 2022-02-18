@@ -33,10 +33,13 @@ public class YoloDetectActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView progressText;
     int progress=0;
-    int Progress_count = 0;
     int dir_size = 0;
     private String imageFolder="";
+    private String product_type="";
     private String path = "";
+
+    private String yolo_m01 = "";
+    private String yolo_m02 = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,10 @@ public class YoloDetectActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         imageFolder = intent.getStringExtra("ImageFolder");
+        product_type = intent.getStringExtra("product_type");
+
+        if(product_type.equals("vehicle"))  { yolo_m01 = "car"; yolo_m02 = "truck"; }
+        if(product_type.equals("product"))  { yolo_m01 = "cup"; yolo_m02 = "mouse"; }
 
         progressBar = findViewById(R.id.progress_bar);
         progressText = findViewById(R.id.progress_text);
@@ -135,7 +142,7 @@ public class YoloDetectActivity extends AppCompatActivity {
 //        boxPaint.setTextSize(30 * mutableBitmap.getWidth() / 800.0f);
         Bitmap res = mutableBitmap;
         for (Box box : results) {
-            if(box.getLabel() == "mouse" || box.getLabel() == "cup")
+            if(box.getLabel() == yolo_m01 || box.getLabel() == yolo_m02)
             {
 //                box.x1 = Math.min(mutableBitmap.getWidth() -1 , box.x1);
 //                box.y1 = Math.min(mutableBitmap.getHeight() -1 , box.y1);
@@ -143,9 +150,9 @@ public class YoloDetectActivity extends AppCompatActivity {
                 int top = (int)box.y0;
                 int box_width = (int)box.getRect().width();
                 int box_height = (int)box.getRect().height();
-                int margin = 30;
+                int margin = 50;
                 if(left-margin >= 0 && top-margin >= 0 && box_width+margin <= mutableBitmap.getWidth() && box_height <= mutableBitmap.getHeight()){
-                    res = Bitmap.createBitmap(mutableBitmap, left-30, top-30, box_width+30, box_height+30);
+                    res = Bitmap.createBitmap(mutableBitmap, left-margin, top-margin, box_width+margin, box_height+margin);
                 }else {
                     res = Bitmap.createBitmap(mutableBitmap, left, top, box_width, box_height);
                 }

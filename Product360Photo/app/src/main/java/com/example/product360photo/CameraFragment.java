@@ -74,6 +74,7 @@ public class CameraFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(),CameraActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                intent.putExtra("product_type", "product");
                 startActivity(intent);
             }
         });
@@ -84,6 +85,7 @@ public class CameraFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(),CameraActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                intent.putExtra("product_type", "vehicle");
                 startActivity(intent);
             }
         });
@@ -94,6 +96,7 @@ public class CameraFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(),CameraActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                intent.putExtra("product_type", "panorama");
                 startActivity(intent);
             }
         });

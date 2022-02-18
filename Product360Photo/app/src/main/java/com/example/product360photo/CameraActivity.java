@@ -82,6 +82,7 @@ public class CameraActivity extends AppCompatActivity {
     private float[] floatRotationMatrix = new float[9];
 
     private String imageFolder="";
+    private String product_type="";
     private String path = "";
 
     @Override
@@ -93,6 +94,9 @@ public class CameraActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 //        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_user);
+
+        Intent intent = getIntent();
+        product_type = intent.getStringExtra("product_type");
 
         imageView = findViewById(R.id.imageView);
         angles = findViewById(R.id.angles);
@@ -191,6 +195,7 @@ public class CameraActivity extends AppCompatActivity {
 
                             Intent intent = new Intent(CameraActivity.this, YoloDetectActivity.class);
                             intent.putExtra("ImageFolder", imageFolder);
+                            intent.putExtra("product_type", product_type);
                             startActivity(intent);
                         }
                     }
@@ -300,6 +305,7 @@ public class CameraActivity extends AppCompatActivity {
 
             Intent intent = new Intent(this, YoloDetectActivity.class);
             intent.putExtra("ImageFolder", imageFolder);
+            intent.putExtra("product_type", product_type);
             startActivity(intent);
 //            finish();
         }
