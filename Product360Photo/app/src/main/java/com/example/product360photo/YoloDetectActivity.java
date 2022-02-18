@@ -135,7 +135,7 @@ public class YoloDetectActivity extends AppCompatActivity {
 //        boxPaint.setTextSize(30 * mutableBitmap.getWidth() / 800.0f);
         Bitmap res = mutableBitmap;
         for (Box box : results) {
-            if(box.getLabel() == "car" || box.getLabel() == "truck")
+            if(box.getLabel() == "mouse" || box.getLabel() == "cup")
             {
 //                box.x1 = Math.min(mutableBitmap.getWidth() -1 , box.x1);
 //                box.y1 = Math.min(mutableBitmap.getHeight() -1 , box.y1);

@@ -186,7 +186,12 @@ public class CameraActivity extends AppCompatActivity {
                             button.setText(R.string.camera_btn_rec);
                             button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FDFFFF")));
                             state.setText( "");
+                            view_finder.setImageResource(R.drawable.view_finder_2);
                             imageView.setVisibility(View.INVISIBLE);
+
+                            Intent intent = new Intent(CameraActivity.this, YoloDetectActivity.class);
+                            intent.putExtra("ImageFolder", imageFolder);
+                            startActivity(intent);
                         }
                     }
 
