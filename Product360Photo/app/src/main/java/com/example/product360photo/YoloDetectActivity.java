@@ -121,6 +121,9 @@ public class YoloDetectActivity extends AppCompatActivity {
                 }
 
             }
+            Intent intent = new Intent(this, ProductViewActivity.class);
+            intent.putExtra("ImageFolder", imageFolder);
+            startActivity(intent);
             finish();
         }
 
