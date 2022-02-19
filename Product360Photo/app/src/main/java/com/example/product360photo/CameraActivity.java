@@ -107,8 +107,9 @@ public class CameraActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(imageFolder.equals(""))   gotoHome();
-                else gotoProductView();
+//                if(imageFolder.equals(""))   gotoHome();
+//                else gotoProductView();
+                gotoHome();
             }
         });
         view_finder = findViewById(R.id.view_finder);
