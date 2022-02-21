@@ -267,6 +267,15 @@ public class CameraActivity extends AppCompatActivity {
         Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, imageCapture, imageAnalysis, preview);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        File dir = new File(GlobalConst.home_path);
+        if(!dir.exists()){
+            dir.mkdir();
+        }
+    }
+
     public void cameraStart(View view){
         if(Flag == 0) {
             Flag = 1;
