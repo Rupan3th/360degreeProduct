@@ -10,15 +10,9 @@
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
 
-
-    <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.location.gps" />
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 2320e2d70dd190484440a1a3dd47818a6e7a3901
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
