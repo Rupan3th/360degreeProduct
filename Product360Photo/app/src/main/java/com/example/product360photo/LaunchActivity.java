@@ -131,13 +131,15 @@ public class LaunchActivity extends AppCompatActivity {
                 perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
                 perms.put(Manifest.permission.CAMERA, PackageManager.PERMISSION_GRANTED);
                 perms.put(Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+                perms.put(Manifest.permission.INTERNET, PackageManager.PERMISSION_GRANTED);
                 // Fill with actual results from user
                 if (grantResults.length > 0) {
                     for (int i = 0; i < permissions.length; i++)
                         perms.put(permissions[i], grantResults[i]);
                     // Check for both permissions
                     if (perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                            && perms.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                            && perms.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                            && perms.get(Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
                         Log.d("in fragment on request", "CAMERA & WRITE_EXTERNAL_STORAGE READ_EXTERNAL_STORAGE permission granted");
                         // process the normal flow
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
