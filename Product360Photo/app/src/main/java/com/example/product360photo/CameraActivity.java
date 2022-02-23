@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -191,11 +192,13 @@ public class CameraActivity extends AppCompatActivity {
                         if(-floatOrientation[0] > first_orientation && count > 25){
                             Flag = 0;
                             count = 0;
-                            button.setText(R.string.camera_btn_rec);
-                            button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FDFFFF")));
+//                            button.setText(R.string.camera_btn_rec);
+                            button.setCompoundDrawablesWithIntrinsicBounds(null, null , null, null);
+//                            button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FDFFFF")));
                             state.setText( "");
 //                            view_finder.setImageResource(R.drawable.view_finder_2);
                             imageView.setVisibility(View.INVISIBLE);
+                            progressBar.setProgress((int) (0));
 
                             Intent intent = new Intent(CameraActivity.this, YoloDetectActivity.class);
                             intent.putExtra("ImageFolder", imageFolder);
@@ -296,8 +299,10 @@ public class CameraActivity extends AppCompatActivity {
     public void cameraStart(View view){
         if(Flag == 0) {
             Flag = 1;
-            button.setText(R.string.camera_btn_stop);
-            button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFFD0303")));
+//            button.setText(R.string.camera_btn_stop);
+            Drawable top = getResources().getDrawable(R.drawable.rounded_rectangle);
+            button.setCompoundDrawablesWithIntrinsicBounds(null, top , null, null);
+//            button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFFD0303")));
 //            view_finder.setImageResource(R.drawable.view_finder_1);
 
             imageFolder = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -310,8 +315,9 @@ public class CameraActivity extends AppCompatActivity {
         else {
             Flag = 0;
             count = 0;
-            button.setText(R.string.camera_btn_rec);
-            button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FDFFFF")));
+//            button.setText(R.string.camera_btn_rec);
+            button.setCompoundDrawablesWithIntrinsicBounds(null, null , null, null);
+//            button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FDFFFF")));
 //            view_finder.setImageResource(R.drawable.view_finder_2);
             state.setText( "");
             imageView.setVisibility(View.INVISIBLE);
