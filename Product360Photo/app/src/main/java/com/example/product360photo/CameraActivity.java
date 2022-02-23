@@ -60,6 +60,7 @@ public class CameraActivity extends AppCompatActivity {
     private ImageCapture imageCapture;
     private ImageView view_finder;
     private View view;
+    private ViewFinderView viewFinder_View;
 
     private float[] floatGravity = new float[3];
     private float[] floatGeoMagnetic = new float[3];
@@ -99,6 +100,7 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
         view_finder = findViewById(R.id.view_finder);
+        viewFinder_View = findViewById(R.id.viewfinder_view);
 
         if (checkPermission()) {
             cameraProviderFuture = ProcessCameraProvider.getInstance(this);
