@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.camera.core.Camera;
@@ -58,7 +59,8 @@ public class CameraActivity extends AppCompatActivity {
     private float cur_orientation;
     private float first_orientation;
     private ImageCapture imageCapture;
-    private ImageView view_finder;
+    private ProgressBar progressBar;
+//    private ImageView view_finder;
     private View view;
     private ViewFinderView viewFinder_View;
 
@@ -99,8 +101,20 @@ public class CameraActivity extends AppCompatActivity {
                 gotoHome();
             }
         });
-        view_finder = findViewById(R.id.view_finder);
-        viewFinder_View = findViewById(R.id.viewfinder_view);
+
+        progressBar = findViewById(R.id.progress_bar);
+
+        viewFinder_View = new ViewFinderView(this);
+        viewFinder_View.setFrameAspectRatio((float) 1.6, (float) 0.9);
+        viewFinder_View.setFrameSize((float)0.65);
+        viewFinder_View.setMaskColor(Color.parseColor("#77000000"));
+        viewFinder_View.setFrameColor(Color.parseColor("#FFFFFF"));
+        viewFinder_View.setFrameCornersSize(660);
+        viewFinder_View.setFrameCornersRadius(30);
+        viewFinder_View.setFrameThickness(2);
+        WindowManager.LayoutParams viewfinder_layoutParams =
+                new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        this.addContentView(viewFinder_View, viewfinder_layoutParams);
 
         if (checkPermission()) {
             cameraProviderFuture = ProcessCameraProvider.getInstance(this);
@@ -154,6 +168,7 @@ public class CameraActivity extends AppCompatActivity {
                         CaptureImage(view);
                         cur_orientation = -floatOrientation[0];
                         first_orientation = cur_orientation;
+                        progressBar.setProgress(count);
                     }else{
                         if(-floatOrientation[0] > cur_orientation+0.1){
                             CaptureImage(view);
@@ -166,6 +181,7 @@ public class CameraActivity extends AppCompatActivity {
                             if(cur_orientation >= 2.9 && -floatOrientation[0] < 0)  {
                                 CaptureImage(view);
                                 cur_orientation = -floatOrientation[0];
+                                progressBar.setProgress(count);
                             }
                             if((-floatOrientation[0]) < cur_orientation-0.1){
                                 state.setText(R.string.state_wrong);
@@ -179,7 +195,7 @@ public class CameraActivity extends AppCompatActivity {
                             button.setText(R.string.camera_btn_rec);
                             button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FDFFFF")));
                             state.setText( "");
-                            view_finder.setImageResource(R.drawable.view_finder_2);
+//                            view_finder.setImageResource(R.drawable.view_finder_2);
                             imageView.setVisibility(View.INVISIBLE);
 
                             Intent intent = new Intent(CameraActivity.this, YoloDetectActivity.class);
@@ -283,7 +299,7 @@ public class CameraActivity extends AppCompatActivity {
             Flag = 1;
             button.setText(R.string.camera_btn_stop);
             button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFFD0303")));
-            view_finder.setImageResource(R.drawable.view_finder_1);
+//            view_finder.setImageResource(R.drawable.view_finder_1);
 
             imageFolder = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
             path = GlobalConst.home_path + File.separator + imageFolder;
@@ -297,7 +313,7 @@ public class CameraActivity extends AppCompatActivity {
             count = 0;
             button.setText(R.string.camera_btn_rec);
             button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FDFFFF")));
-            view_finder.setImageResource(R.drawable.view_finder_2);
+//            view_finder.setImageResource(R.drawable.view_finder_2);
             state.setText( "");
             imageView.setVisibility(View.INVISIBLE);
 

@@ -13,16 +13,16 @@
         android:layout_height="match_parent"
         android:background="@android:color/holo_green_dark"/>
 
-    <com.example.product360photo.ViewFinderView
-        android:id="@+id/viewfinder_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+<!--    <com.example.product360photo.ViewFinderView-->
+<!--        android:id="@+id/viewfinder_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"/>-->
 
-    <ImageView
-        android:id="@+id/view_finder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:srcCompat="@drawable/view_finder_2"/>
+<!--    <ImageView-->
+<!--        android:id="@+id/view_finder"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:srcCompat="@drawable/view_finder_2"/>-->
 
     <ImageView
         android:id="@+id/imageView"
@@ -63,10 +63,23 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:background="@drawable/circular_shape"
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/circular_progress_bar"
+        android:layout_marginRight="35dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <Button
         android:id="@+id/button"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginRight="50dp"
         android:background="@drawable/round_shape"
         android:onClick="cameraStart"
