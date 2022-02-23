@@ -321,6 +321,7 @@ public class CameraActivity extends AppCompatActivity {
 //            view_finder.setImageResource(R.drawable.view_finder_2);
             state.setText( "");
             imageView.setVisibility(View.INVISIBLE);
+            progressBar.setProgress((int) (0));
 
             Intent intent = new Intent(this, YoloDetectActivity.class);
             intent.putExtra("ImageFolder", imageFolder);
