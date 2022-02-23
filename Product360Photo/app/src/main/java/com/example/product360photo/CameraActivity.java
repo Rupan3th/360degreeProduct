@@ -168,12 +168,11 @@ public class CameraActivity extends AppCompatActivity {
                         CaptureImage(view);
                         cur_orientation = -floatOrientation[0];
                         first_orientation = cur_orientation;
-                        progressBar.setProgress(count);
                     }else{
                         if(-floatOrientation[0] > cur_orientation+0.1){
                             CaptureImage(view);
                             cur_orientation = -floatOrientation[0];
-
+                            progressBar.setProgress(count);
                             state.setText(R.string.state_continue);
                             state.setTextColor(Color.parseColor("#03ff31"));
                             imageView.setVisibility(View.INVISIBLE);
