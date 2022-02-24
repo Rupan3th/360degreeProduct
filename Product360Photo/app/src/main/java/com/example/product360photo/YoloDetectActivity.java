@@ -199,7 +199,8 @@ public class YoloDetectActivity extends AppCompatActivity {
         if (results == null || results.length <= 0) {
             return mutableBitmap;
         }
-
+        if(mutableBitmap == null)
+            return null;
         Bitmap res = mutableBitmap;
         for (Box box : results) {
             if(box.getLabel() == yolo_m01 || box.getLabel() == yolo_m02)
@@ -207,8 +208,10 @@ public class YoloDetectActivity extends AppCompatActivity {
 
                 int center_x = (int)(box.x0 + box.x1)/2;
                 int center_y = (int)(box.y0 + box.y1)/2;
-                int left = Math.max(0, center_x - crop_width/2);
-                int top = Math.max(0, center_y - crop_height /2);
+                int left = Math.max(GlobalConst.Crop_Margin, center_x - crop_width/2);
+                int top = Math.max(GlobalConst.Crop_Margin, center_y - crop_height /2);
+                left = Math.min(left, mutableBitmap.getWidth() - crop_width - GlobalConst.Crop_Margin);
+                top = Math.min(top, mutableBitmap.getHeight() - crop_height - GlobalConst.Crop_Margin);
                 res = Bitmap.createBitmap(mutableBitmap, left, top, crop_width, crop_height);
 
             }
