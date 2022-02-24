@@ -6,7 +6,7 @@ import java.io.File;
 
 public final class GlobalConst {
 
-    public static final  String home_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + File.separator + "product360";
+    public static String home_path =  "product360";
 
     public static final int Crop_Margin = 30;
     public static final int Crop_Width = 2880;

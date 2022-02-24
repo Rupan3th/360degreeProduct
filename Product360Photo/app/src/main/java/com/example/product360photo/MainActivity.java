@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
 //        actionBar.setBackgroundDrawable(colorDrawable);
         actionBar.setTitle(s);
 
+        GlobalConst.home_path = getApplicationContext().getFilesDir() + File.separator + "product360";
+
 
         init(); //object define
         SettingListener(); //Listener regist
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
+        GlobalConst.home_path = getApplicationContext().getFilesDir() + File.separator + "product360";
         File dir = new File(GlobalConst.home_path);
         if(!dir.exists()){
             dir.mkdir();

@@ -98,6 +98,7 @@ public class LaunchActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
             return false;
         }
+        /*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if(!Environment.isExternalStorageManager())
             {
@@ -112,7 +113,7 @@ public class LaunchActivity extends AppCompatActivity {
                 }
                 return false;
             }
-        }
+        }*/
 
         return true;
     }
@@ -142,6 +143,7 @@ public class LaunchActivity extends AppCompatActivity {
                             && perms.get(Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
                         Log.d("in fragment on request", "CAMERA & WRITE_EXTERNAL_STORAGE READ_EXTERNAL_STORAGE permission granted");
                         // process the normal flow
+                        /*
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                             if(!Environment.isExternalStorageManager())
                             {
@@ -157,7 +159,7 @@ public class LaunchActivity extends AppCompatActivity {
 
                             }
                         }
-                        else
+                        else*/
                         {
                             Intent mainIntent = new Intent(LaunchActivity.this, MainActivity.class);
                             startActivity(mainIntent);
