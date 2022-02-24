@@ -1,6 +1,7 @@
 package com.example.product360photo;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,6 +15,8 @@ import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -32,6 +35,10 @@ public class YoloDetectActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private TextView progressText;
+    private LinearLayout productNameSet;
+    private EditText productName;
+    private Button save_btn;
+
     int progress=0;
     int dir_size = 0;
     private String imageFolder="";
@@ -75,6 +82,34 @@ public class YoloDetectActivity extends AppCompatActivity {
 
         progressText.setText("Progressing...");
 
+        productNameSet = findViewById(R.id.productName_set);
+        productName = findViewById(R.id.product_Name);
+        productName.setText(imageFolder);
+        save_btn = findViewById(R.id.save_btn);
+        save_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!productName.getText().equals("") && !productName.getText().equals(imageFolder)){
+                    File oldFolder = new File(GlobalConst.home_path, imageFolder);
+                    File newFolder = new File(GlobalConst.home_path, productName.getText().toString());
+                    boolean success = oldFolder.renameTo(newFolder);
+                    if(success == true)
+                    {
+                        imageFolder = productName.getText().toString();
+                        Intent intent = new Intent(YoloDetectActivity.this, ProductViewActivity.class);
+                        intent.putExtra("ImageFolder", imageFolder);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else{
+                        new AlertDialog.Builder(YoloDetectActivity.this)
+                                .setMessage("Please enter another name.")
+                                .show();
+                    }
+                }
+            }
+        });
+
         YOLOv4.init(getAssets(), USE_GPU);
         //YoloDetectCrop();
 
@@ -86,6 +121,22 @@ public class YoloDetectActivity extends AppCompatActivity {
             }
         });
         thread.start();
+    }
+
+    private void renameFolder(View view){
+        if(!productName.getText().equals("") && !productName.getText().equals(imageFolder)){
+            File oldFolder = new File(GlobalConst.home_path,imageFolder);
+            File newFolder = new File(GlobalConst.home_path,productName.getText().toString());
+            boolean success = oldFolder.renameTo(newFolder);
+            if(success == true)
+            {
+                Intent intent = new Intent(this, ProductViewActivity.class);
+                intent.putExtra("ImageFolder", imageFolder);
+                startActivity(intent);
+                finish();
+            }
+        }
+
     }
 
 
@@ -110,6 +161,12 @@ public class YoloDetectActivity extends AppCompatActivity {
                             int pro = progress * 100 / dir_size;
                             progressText.setText(pro + "%");
                             progressBar.setProgress(pro);
+
+//                            if(pro == 100){
+//                                progressBar.setVisibility(View.INVISIBLE);
+//                                progressText.setVisibility(View.INVISIBLE);
+//                                productNameSet.setVisibility(View.VISIBLE);
+//                            }
                         }
                     });
 
@@ -121,10 +178,19 @@ public class YoloDetectActivity extends AppCompatActivity {
                 }
 
             }
-            Intent intent = new Intent(this, ProductViewActivity.class);
-            intent.putExtra("ImageFolder", imageFolder);
-            startActivity(intent);
-            finish();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    progressText.setVisibility(View.INVISIBLE);
+                    productNameSet.setVisibility(View.VISIBLE);
+                }
+            });
+//            Intent intent = new Intent(this, ProductViewActivity.class);
+//            intent.putExtra("ImageFolder", imageFolder);
+//            startActivity(intent);
+//            finish();
         }
 
     }
