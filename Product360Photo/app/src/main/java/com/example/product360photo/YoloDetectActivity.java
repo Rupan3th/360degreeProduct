@@ -48,7 +48,7 @@ public class YoloDetectActivity extends AppCompatActivity {
     private String yolo_m01 = "";
     private String yolo_m02 = "";
 
-    private int crop_width =1920;
+    private int crop_width =1440;
     private int crop_height = 1080;
 
     @Override
@@ -202,6 +202,11 @@ public class YoloDetectActivity extends AppCompatActivity {
         if(mutableBitmap == null)
             return null;
         Bitmap res = mutableBitmap;
+
+        crop_width = (int)(mutableBitmap.getWidth()*GlobalConst.Crop_Ratio);
+        crop_height = (int)(mutableBitmap.getHeight()*GlobalConst.Crop_Ratio);
+
+
         int cx = 0; int cy=0; float width = 0; float height = 0;
 
         for (Box box : results) {
@@ -219,7 +224,7 @@ public class YoloDetectActivity extends AppCompatActivity {
             int ww = (int)width;
             int hh = (int)height;
 
-            if(ww <= crop_width && hh <= crop_height)
+            //if(ww <= crop_width && hh <= crop_height)
             {
                 int left = Math.max(GlobalConst.Crop_Margin, cx - crop_width/2);
                 int top = Math.max(GlobalConst.Crop_Margin, cy - crop_height /2);
@@ -227,10 +232,7 @@ public class YoloDetectActivity extends AppCompatActivity {
                 top = Math.min(top, mutableBitmap.getHeight() - crop_height - GlobalConst.Crop_Margin);
                 res = Bitmap.createBitmap(mutableBitmap, left, top, crop_width, crop_height);
             }
-            else
-            {
 
-            }
         }
 
         return res;
@@ -251,7 +253,7 @@ public class YoloDetectActivity extends AppCompatActivity {
         return res;
     }
     protected Bitmap detectAndDraw(Bitmap image) {
-        /*
+
         Box[] result = null;
         result = YOLOv4.detect(image, threshold, nms_threshold);
         if (result == null ) {
@@ -260,15 +262,16 @@ public class YoloDetectActivity extends AppCompatActivity {
         if(!checkResult(result))
             return null;
         Bitmap mutableBitmap = drawBoxRects(image, result);
-        if(crop_width != GlobalConst.Resize_Width)
+        if(crop_height != GlobalConst.Resize_Height)
         {
+            GlobalConst.Resize_Width = crop_width *GlobalConst.Resize_Height/crop_height;
             Bitmap newBitmap = Bitmap.createScaledBitmap(mutableBitmap, GlobalConst.Resize_Width,
                     GlobalConst.Resize_Height, true);
             return newBitmap;
         }
-        return mutableBitmap;*/
-        Bitmap newBitmap = Bitmap.createScaledBitmap(image, GlobalConst.Resize_Width,
+        return mutableBitmap;
+       /* Bitmap newBitmap = Bitmap.createScaledBitmap(image, GlobalConst.Resize_Width,
                 GlobalConst.Resize_Height, true);
-        return newBitmap;
+        return newBitmap;*/
     }
 }
