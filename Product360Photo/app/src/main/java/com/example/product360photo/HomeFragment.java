@@ -1,11 +1,13 @@
 package com.example.product360photo;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
@@ -67,18 +69,6 @@ public class HomeFragment extends Fragment {
         return fragment;
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        mContext = context;
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mContext = null;
-//    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,13 +102,6 @@ public class HomeFragment extends Fragment {
 
         CreateModelArrayList();
 
-//        courseModelArrayList.add(new CourseModel("DSA", R.drawable.ic_home));
-//        courseModelArrayList.add(new CourseModel("JAVA", R.drawable.ic_home));
-//        courseModelArrayList.add(new CourseModel("C++", R.drawable.ic_home));
-//        courseModelArrayList.add(new CourseModel("Python", R.drawable.ic_home));
-//        courseModelArrayList.add(new CourseModel("Javascript", R.drawable.ic_home));
-//        courseModelArrayList.add(new CourseModel("DSA", R.drawable.ic_home));
-
         if(mContext != null) {
             //your code that uses Context
             adapter = new CourseGVAdapter(mContext, courseModelArrayList);
@@ -132,6 +115,33 @@ public class HomeFragment extends Fragment {
                     intent.putExtra("ImageFolder", itemFolder);
                     startActivity(intent);
 
+                }
+            });
+
+            coursesGV.setLongClickable(true);
+            coursesGV.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean  onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    String itemFolder = ((TextView)view.findViewById(R.id.idTVCourse)).getText().toString();
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage("Are you sure you want to delete this folder?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    String saved_path = GlobalConst.home_path + File.separator + itemFolder;
+                                    File dir = new File(saved_path);
+                                    deleteRecursive(dir);
+
+                                    getActivity().recreate();
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            })
+                            .show();
+                    return true;
                 }
             });
         }
@@ -154,6 +164,14 @@ public class HomeFragment extends Fragment {
             }
 
         }
+    }
+
+    private void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                deleteRecursive(child);
+
+        fileOrDirectory.delete();
     }
 
 
