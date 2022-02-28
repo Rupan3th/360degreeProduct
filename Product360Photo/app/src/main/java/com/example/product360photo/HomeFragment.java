@@ -126,7 +126,7 @@ public class HomeFragment extends Fragment {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setMessage("Are you sure you want to delete this folder?")
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     String saved_path = GlobalConst.home_path + File.separator + itemFolder;
                                     File dir = new File(saved_path);
@@ -135,7 +135,7 @@ public class HomeFragment extends Fragment {
                                     getActivity().recreate();
                                 }
                             })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
                                 }
