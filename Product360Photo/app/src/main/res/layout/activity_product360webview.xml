@@ -6,9 +6,13 @@
     android:layout_height="match_parent">
 
     <com.example.product360photo.ProductShowCaseWebView
+        android:id="@+id/web_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/web_view" />
+        android:layout_marginEnd="300dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
         android:id="@+id/back_btn"

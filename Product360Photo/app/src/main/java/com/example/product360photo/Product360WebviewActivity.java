@@ -1,10 +1,13 @@
 package com.example.product360photo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +25,6 @@ public class Product360WebviewActivity extends AppCompatActivity {
         ProductShowCaseWebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
 
         ProductShowCaseWebView wv = (ProductShowCaseWebView) findViewById(R.id.web_view);
-
         String imagesTag360="";
 
         /*Taking images from storage folder*/
@@ -53,7 +55,7 @@ public class Product360WebviewActivity extends AppCompatActivity {
                     "data-magnifier=\"3\"\n" +
                     "data-spin-reverse\n" +
                     "data-full-screen\n" +
-                    "></div>" +
+                    "data-drag-speed=0.5></div>" +
                     "\n" +
                     "<script type=\"text/javascript\" src=\"file:///android_asset/js/jscloud360.js\"></script>\n" +
                     "</body>";
@@ -74,4 +76,5 @@ public class Product360WebviewActivity extends AppCompatActivity {
             }
         });
     }
+
 }

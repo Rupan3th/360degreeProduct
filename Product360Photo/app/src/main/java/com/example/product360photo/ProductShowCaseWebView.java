@@ -29,9 +29,11 @@ public class ProductShowCaseWebView extends WebView {
 
         addJavascriptInterface(new JavaScriptInterface(),
                 "jsinterface");
-        setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-
-        getSettings().setAllowFileAccess(true);
+       // setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+       // getSettings().setUseWideViewPort(true);
+        getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
+       // getSettings().setLoadWithOverviewMode(true);
+         getSettings().setAllowFileAccess(true);
         getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
     }
 

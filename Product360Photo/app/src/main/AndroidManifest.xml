@@ -49,7 +49,7 @@
         <activity
             android:name=".Product360WebviewActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".YolotestActivity"
             android:exported="false"
