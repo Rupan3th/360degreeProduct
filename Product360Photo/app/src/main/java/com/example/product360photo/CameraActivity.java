@@ -146,6 +146,52 @@ public class CameraActivity extends AppCompatActivity {
                 SensorManager.getRotationMatrix(floatRotationMatrix, null, floatGravity, floatGeoMagnetic);
                 SensorManager.getOrientation(floatRotationMatrix, floatOrientation);
                 //to do camera capture
+                angles.setText( String.valueOf(-floatOrientation[0]));
+
+                if(Flag == 1){
+                    if(count < 1){
+                        CaptureImage(view);
+                        cur_orientation = -floatOrientation[0];
+                        first_orientation = cur_orientation;
+                    }else{
+                        if(-floatOrientation[0] > cur_orientation+0.1){
+                            CaptureImage(view);
+                            cur_orientation = -floatOrientation[0];
+                            progressBar.setProgress((int) (count*1.6));
+                            state.setText(R.string.state_continue);
+                            state.setTextColor(Color.parseColor("#03ff31"));
+                            imageView.setVisibility(View.INVISIBLE);
+                        }else {
+                            if(cur_orientation >= 2.9 && -floatOrientation[0] < 0)  {
+                                CaptureImage(view);
+                                cur_orientation = -floatOrientation[0];
+                                progressBar.setProgress((int) (count*1.6));
+                            }
+                            if((-floatOrientation[0]) < cur_orientation-0.1){
+                                state.setText(R.string.state_wrong);
+                                state.setTextColor(Color.parseColor("#ff0303"));
+                                imageView.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        if(-floatOrientation[0] > first_orientation && count > 25){
+                            Flag = 0;
+                            count = 0;
+//                            button.setText(R.string.camera_btn_rec);
+                            button.setCompoundDrawablesWithIntrinsicBounds(null, null , null, null);
+//                            button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FDFFFF")));
+                            state.setText( "");
+//                            view_finder.setImageResource(R.drawable.view_finder_2);
+                            imageView.setVisibility(View.INVISIBLE);
+                            progressBar.setProgress((int) (0));
+
+                            Intent intent = new Intent(CameraActivity.this, YoloDetectActivity.class);
+                            intent.putExtra("ImageFolder", imageFolder);
+                            intent.putExtra("product_type", product_type);
+                            startActivity(intent);
+                        }
+                    }
+
+                }
             }
 
             @Override
