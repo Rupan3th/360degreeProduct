@@ -51,6 +51,9 @@ public class YoloDetectActivity extends AppCompatActivity {
     private int crop_width =1440;
     private int crop_height = 1080;
 
+    private int prev_left =0;
+    private int prev_top = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,6 +147,8 @@ public class YoloDetectActivity extends AppCompatActivity {
         path = GlobalConst.home_path + File.separator + imageFolder;
         File dir = new File(path);
         dir_size = dir.listFiles().length;
+        prev_left = 0;
+        prev_top = 0;
         if(dir.exists()){
             for (int i = 0; i < dir.listFiles().length; i++) {
                 Bitmap bitmap = BitmapFactory.decodeFile(path + "/" + dir.listFiles()[i].getName());
@@ -196,16 +201,21 @@ public class YoloDetectActivity extends AppCompatActivity {
     }
 
     protected Bitmap drawBoxRects(Bitmap mutableBitmap, Box[] results) {
-        if (results == null || results.length <= 0) {
-            return mutableBitmap;
-        }
         if(mutableBitmap == null)
             return null;
-        Bitmap res = mutableBitmap;
 
         crop_width = (int)(mutableBitmap.getWidth()*GlobalConst.Crop_Ratio);
         crop_height = (int)(mutableBitmap.getHeight()*GlobalConst.Crop_Ratio);
+        Bitmap res = mutableBitmap;
 
+        if (results == null || results.length <= 0) {
+            if(prev_left > 0 && prev_top > 0)
+            {
+                res = Bitmap.createBitmap(mutableBitmap, prev_left, prev_top, crop_width, crop_height);
+                return res;
+            }
+            return mutableBitmap;
+        }
 
         int cx = 0; int cy=0; float width = 0; float height = 0;
 
@@ -231,6 +241,8 @@ public class YoloDetectActivity extends AppCompatActivity {
                 left = Math.min(left, mutableBitmap.getWidth() - crop_width - GlobalConst.Crop_Margin);
                 top = Math.min(top, mutableBitmap.getHeight() - crop_height - GlobalConst.Crop_Margin);
                 res = Bitmap.createBitmap(mutableBitmap, left, top, crop_width, crop_height);
+                prev_left = left;
+                prev_top = top;
             }
 
         }
@@ -256,11 +268,11 @@ public class YoloDetectActivity extends AppCompatActivity {
 
         Box[] result = null;
         result = YOLOv4.detect(image, threshold, nms_threshold);
-        if (result == null ) {
+        /*if (result == null ) {
             return null;
         }
         if(!checkResult(result))
-            return null;
+            return null;*/
         Bitmap mutableBitmap = drawBoxRects(image, result);
         if(crop_height != GlobalConst.Resize_Height)
         {
