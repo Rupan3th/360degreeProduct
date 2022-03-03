@@ -68,8 +68,17 @@ public class CameraActivity extends AppCompatActivity {
     private float[] floatGravity = new float[3];
     private float[] floatGeoMagnetic = new float[3];
 
-    private float[] floatOrientation = new float[3];
+    private float[] floatOrientation = new float[9];
     private float[] floatRotationMatrix = new float[9];
+    float[] mI = new float[9];
+
+    private double roll;
+    private double timestamp;
+    private double dt;
+    private double RAD2DGR = 180 / Math.PI;
+    private static final float NS2S = 1.0f/1000000000.0f;
+    private double cur_roll;
+    private double first_roll;
 
     private String imageFolder="";
     private String product_type="";
@@ -137,13 +146,15 @@ public class CameraActivity extends AppCompatActivity {
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         Sensor sensorMagneticField = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        Sensor sensorGyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
         SensorEventListener sensorEventListenerAccelrometer = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
                 floatGravity = event.values;
 
-                SensorManager.getRotationMatrix(floatRotationMatrix, null, floatGravity, floatGeoMagnetic);
+                SensorManager.getRotationMatrix(floatRotationMatrix, mI, floatGravity, floatGeoMagnetic);
+                float inclination = SensorManager.getInclination(mI);
                 SensorManager.getOrientation(floatRotationMatrix, floatOrientation);
                 //to do camera capture
                 angles.setText( String.valueOf(-floatOrientation[0]));
@@ -277,8 +288,68 @@ public class CameraActivity extends AppCompatActivity {
             }
         };
 
-        sensorManager.registerListener(sensorEventListenerAccelrometer, sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(sensorEventListenerMagneticField, sensorMagneticField, SensorManager.SENSOR_DELAY_NORMAL);
+
+        SensorEventListener sensorEventListenerGyroscope = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                double gyroX = event.values[0];
+                dt = (event.timestamp - timestamp) * NS2S;
+                timestamp = event.timestamp;
+                if (dt - timestamp*NS2S != 0) {
+                    roll = roll + gyroX*dt;
+                    angles.setText( String.format("%.1f", roll*RAD2DGR));
+
+                    if(Flag == 1){
+                        if(count < 1){
+                            CaptureImage(view);
+                            cur_roll = roll;
+                            first_roll = cur_roll;
+                        }else{
+                            if(roll > cur_roll+0.1){
+                                CaptureImage(view);
+                                cur_roll = roll;
+                                progressBar.setProgress((int) (count*1.6));
+                                state.setText(R.string.state_continue);
+                                state.setTextColor(Color.parseColor("#03ff31"));
+                                imageView.setVisibility(View.INVISIBLE);
+                            }else {
+                                if((roll) < cur_roll-0.1){
+                                    state.setText(R.string.state_wrong);
+                                    state.setTextColor(Color.parseColor("#ff0303"));
+                                    imageView.setVisibility(View.VISIBLE);
+                                }
+                            }
+                            if(roll > first_roll+6.28 && count > 30){
+                                Flag = 0;
+                                count = 0;
+                                button.setCompoundDrawablesWithIntrinsicBounds(null, null , null, null);
+                                state.setText( "");
+                                imageView.setVisibility(View.INVISIBLE);
+                                progressBar.setProgress((int) (0));
+
+                                Intent intent = new Intent(CameraActivity.this, YoloDetectActivity.class);
+                                intent.putExtra("ImageFolder", imageFolder);
+                                intent.putExtra("product_type", product_type);
+                                startActivity(intent);
+                            }
+                        }
+
+                    }
+                }
+
+
+
+
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            }
+        };
+
+        //sensorManager.registerListener(sensorEventListenerAccelrometer, sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        //sensorManager.registerListener(sensorEventListenerMagneticField, sensorMagneticField, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(sensorEventListenerGyroscope, sensorGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
 
     }
 
