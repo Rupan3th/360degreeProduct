@@ -78,7 +78,7 @@ public class CameraActivity extends AppCompatActivity {
     private double RAD2DGR = 180 / Math.PI;
     private static final float NS2S = 1.0f/1000000000.0f;
     private double cur_roll;
-    private double first_roll;
+    private double first_roll = 0;
 
     private String imageFolder="";
     private String product_type="";
@@ -297,7 +297,7 @@ public class CameraActivity extends AppCompatActivity {
                 timestamp = event.timestamp;
                 if (dt - timestamp*NS2S != 0) {
                     roll = roll + gyroX*dt;
-                    angles.setText( String.format("%.1f", roll*RAD2DGR));
+                    angles.setText( String.format("%.2f", (roll-first_roll)*RAD2DGR));
 
                     if(Flag == 1){
                         if(count < 1){
@@ -319,7 +319,7 @@ public class CameraActivity extends AppCompatActivity {
                                     imageView.setVisibility(View.VISIBLE);
                                 }
                             }
-                            if(roll > first_roll+6.28 && count > 30){
+                            if(roll > first_roll+6.27 && count > 30){
                                 Flag = 0;
                                 count = 0;
                                 button.setCompoundDrawablesWithIntrinsicBounds(null, null , null, null);
